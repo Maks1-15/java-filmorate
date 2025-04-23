@@ -33,9 +33,4 @@ public class FilmController {
     public List<Film> getAllFilms() {
         return filmService.getAllFilms();
     }
-
-    // Дописать тесты, валидацию и ислючение, придумать вью
-    // Дорабоать бд, где созда одинаковые пользователи и фильмы
-    // добавить исключения, сделать классно
-    // попробовать сделать view
 }
