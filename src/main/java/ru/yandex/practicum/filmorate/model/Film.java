@@ -11,6 +11,7 @@ public class Film {
     private Long id; // id фильма
 
     @NotBlank
+    @NotNull
     private String title; // название фильма
 
     @Size(max = 200)
@@ -19,8 +20,10 @@ public class Film {
 
     @Past
     @ReleaseDateValidation
+    @NotNull
     private LocalDate releaseDate; // дата релиза
 
     @Positive
+    @NotNull
     private Integer duration; // продолжительность фильма
 }
