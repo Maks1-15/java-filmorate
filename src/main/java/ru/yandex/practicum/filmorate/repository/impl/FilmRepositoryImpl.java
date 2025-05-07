@@ -62,7 +62,7 @@ public class FilmRepositoryImpl implements GenericRepository<Film> {
     }
 
     private boolean existsByTitle(String title) {
-        return films.values().stream().
-                anyMatch(f -> f.getTitle().equalsIgnoreCase(title));
+        return films.values().stream()
+                .anyMatch(f -> f.getTitle().equalsIgnoreCase(title));
     }
 }
