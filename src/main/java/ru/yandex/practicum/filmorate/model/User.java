@@ -21,6 +21,5 @@ public class User {
     private String login; // логин пользователя
 
     @Past
-    @NotBlank
     private LocalDate birthday; // др пользователя
 }

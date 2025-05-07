@@ -1,9 +1,6 @@
 package ru.yandex.practicum.filmorate.model;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Past;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 import ru.yandex.practicum.filmorate.model.validation.ReleaseDateValidation;
 
@@ -21,11 +18,9 @@ public class Film {
     private String description; // описание фильма
 
     @Past
-    @NotBlank
     @ReleaseDateValidation
     private LocalDate releaseDate; // дата релиза
 
     @Positive
-    @NotBlank
     private Integer duration; // продолжительность фильма
 }
