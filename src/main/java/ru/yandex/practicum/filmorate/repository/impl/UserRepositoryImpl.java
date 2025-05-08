@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.repository.impl;
 
 import org.springframework.stereotype.Repository;
+import ru.yandex.practicum.filmorate.exception.EmailAlreadyExistsException;
 import ru.yandex.practicum.filmorate.exception.EntityNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.repository.GenericRepository;
@@ -16,6 +17,10 @@ public class UserRepositoryImpl implements GenericRepository<User> {
 
     @Override
     public User create(User user) {
+        if (existsByEmail(user.getEmail())) {
+            throw new EmailAlreadyExistsException("Пользователь с email " + user.getEmail() + " уже существует.");
+        }
+
         user.setId((long) idGenerator.getAndIncrement());
         users.put(user.getId(), user);
         return user;
@@ -52,4 +57,10 @@ public class UserRepositoryImpl implements GenericRepository<User> {
         }
         users.remove(id);
     }
+
+    private boolean existsByEmail(String email) {
+        return users.values().stream()
+                .anyMatch(f -> f.getEmail().equalsIgnoreCase(email));
+    }
+
 }
