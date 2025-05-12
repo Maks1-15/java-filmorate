@@ -6,16 +6,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.EntityNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.impl.FilmServiceImpl;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
@@ -41,11 +37,11 @@ public class FilmController {
     @PutMapping
     public ResponseEntity<Film> update(@Valid @RequestBody Film film) {
         log.info("Получен запрос на обновление фильма: {}", film);
-        try {
-            Film updatedFilm = filmService.update(film);
+        Film updatedFilm = filmService.update(film);
+        if (updatedFilm != null) {
             log.info("Фильм успешно обновлен с ID: {}", updatedFilm.getId());
             return new ResponseEntity<>(updatedFilm, HttpStatus.OK);
-        } catch (EntityNotFoundException e) {
+        } else {
             log.warn("Фильм с ID {} не найден для обновления.", film.getId());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -91,33 +87,5 @@ public class FilmController {
             log.warn("Фильм с ID {} не найден для удаления.", id);
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-    }
-
-    // Обработчик исключений для валидации
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, String>> handleValidationExceptions(
-            MethodArgumentNotValidException ex) {
-        log.warn("Ошибка валидации данных: {}", ex.getMessage());
-        Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getAllErrors().forEach((error) -> {
-            String fieldName = ((FieldError) error).getField();
-            String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName, errorMessage);
-        });
-        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
-    }
-
-    // Обработчик исключений для EntityNotFoundException
-    @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<String> handleEntityNotFoundException(EntityNotFoundException ex) {
-        log.warn("Entity not found: {}", ex.getMessage());
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
-    }
-
-    // Глобальный обработчик исключений
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleGlobalExceptions(Exception ex) {
-        log.error("Произошла ошибка: {}", ex.getMessage(), ex); // Log stack trace
-        return new ResponseEntity<>("Произошла внутренняя ошибка сервера.", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

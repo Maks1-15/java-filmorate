@@ -17,8 +17,8 @@ public class FilmRepositoryImpl implements GenericRepository<Film> {
 
     @Override
     public Film create(Film film) {
-        if (existsByTitle(film.getTitle())) {
-            throw new FilmAlreadyExistsException("Фильм с названием '" + film.getTitle() + "' уже существует.");
+        if (existsByTitle(film.getName())) {
+            throw new FilmAlreadyExistsException("Фильм с названием '" + film.getName() + "' уже существует.");
         }
 
         Long id = (long) idGenerator.getAndIncrement();
@@ -63,6 +63,6 @@ public class FilmRepositoryImpl implements GenericRepository<Film> {
 
     private boolean existsByTitle(String title) {
         return films.values().stream()
-                .anyMatch(f -> f.getTitle().equalsIgnoreCase(title));
+                .anyMatch(f -> f.getName().equalsIgnoreCase(title));
     }
 }

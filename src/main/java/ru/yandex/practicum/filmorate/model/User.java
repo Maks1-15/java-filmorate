@@ -12,7 +12,7 @@ import java.time.LocalDate;
 public class User {
     private Long id; // id пользователя
     // Валидация через метод
-    private String name; // имя пользователя
+    private String name; // имя пользоФвателя
 
     @Email
     @NotBlank

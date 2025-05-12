@@ -31,6 +31,7 @@ public class UserRepositoryImpl implements GenericRepository<User> {
         if (!users.containsKey(user.getId())) {
             throw new EntityNotFoundException("Пользователь с ID " + user.getId() + " не найден.");
         }
+
         users.put(user.getId(), user);
         return user;
     }

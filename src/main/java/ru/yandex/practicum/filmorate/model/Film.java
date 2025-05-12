@@ -12,7 +12,7 @@ public class Film {
 
     @NotBlank
     @NotNull
-    private String title; // название фильма
+    private String name; // название фильма
 
     @Size(max = 200)
     @NotBlank

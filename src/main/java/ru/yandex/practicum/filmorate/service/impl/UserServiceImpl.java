@@ -19,6 +19,7 @@ public class UserServiceImpl implements GenericService<User> {
         this.userRepository = userRepository;
     }
 
+    @Override
     public User create(User user) {
         if (user.getName() == null) {
             user.setName(user.getLogin());
@@ -26,22 +27,27 @@ public class UserServiceImpl implements GenericService<User> {
         return userRepository.create(user);
     }
 
+    @Override
     public User update(User user) {
         return userRepository.update(user);
     }
 
+    @Override
     public List<User> getAll() {
         return userRepository.getAll();
     }
 
+    @Override
     public Optional<User> getById(Long id) {
         return userRepository.getById(id);
     }
 
+    @Override
     public void deleteAll() {
         userRepository.deleteAll();
     }
 
+    @Override
     public void deleteById(Long id) {
         userRepository.deleteById(id);
     }
