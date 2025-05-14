@@ -1,8 +1,8 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,19 +10,14 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.impl.UserServiceImpl;
 
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @RestController
 @RequestMapping("/users")
+@RequiredArgsConstructor
 public class UserController {
 
     private final UserServiceImpl userService;
-
-    @Autowired
-    public UserController(UserServiceImpl userService) {
-        this.userService = userService;
-    }
 
     @PostMapping
     public ResponseEntity<User> create(@Valid @RequestBody User user) {
@@ -51,34 +46,5 @@ public class UserController {
         List<User> users = userService.getAll();
         log.info("Возвращено {} пользователей.", users.size());
         return new ResponseEntity<>(users, HttpStatus.OK);
-    }
-
-    @GetMapping("{id}")
-    public ResponseEntity<User> getById(@PathVariable Long id) {
-        log.info("Получен запрос на получение пользователя с ID: {}", id);
-        Optional<User> user = userService.getById(id);
-        if (user.isPresent()) {
-            log.info("Пользователь с ID {} найден.", id);
-            return new ResponseEntity<>(user.get(), HttpStatus.OK);
-        } else {
-            log.warn("Пользователь с ID {} не найден.", id);
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @DeleteMapping
-    public ResponseEntity<Void> deleteAll() {
-        log.info("Получен запрос на удаление всех пользователей.");
-        userService.deleteAll();
-        log.info("Все пользователи удалены.");
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
-    @DeleteMapping("{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable Long id) {
-        log.info("Получен запрос на удаление пользователя с ID: {}", id);
-        userService.deleteById(id);
-        log.info("Пользователь с ID {} удален.", id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

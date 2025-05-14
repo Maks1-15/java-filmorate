@@ -37,26 +37,8 @@ public class UserRepositoryImpl implements GenericRepository<User> {
     }
 
     @Override
-    public void deleteAll() {
-        users.clear();
-    }
-
-    @Override
     public List<User> getAll() {
         return new ArrayList<>(users.values());
-    }
-
-    @Override
-    public Optional<User> getById(Long id) {
-        return Optional.ofNullable(users.get(id));
-    }
-
-    @Override
-    public void deleteById(Long id) {
-        if (!users.containsKey(id)) {
-            throw new EntityNotFoundException("Пользователь с ID " + id + " не найден.");
-        }
-        users.remove(id);
     }
 
     private boolean existsByEmail(String email) {

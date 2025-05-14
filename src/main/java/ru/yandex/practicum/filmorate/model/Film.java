@@ -1,12 +1,14 @@
 package ru.yandex.practicum.filmorate.model;
 
 import jakarta.validation.constraints.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import ru.yandex.practicum.filmorate.model.validation.ReleaseDateValidation;
 
 import java.time.LocalDate;
 
-@Data
+@Getter
+@Setter
 public class Film {
     private Long id; // id фильма
 

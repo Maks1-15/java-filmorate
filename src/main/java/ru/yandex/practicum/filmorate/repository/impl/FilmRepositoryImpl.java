@@ -38,27 +38,8 @@ public class FilmRepositoryImpl implements GenericRepository<Film> {
     }
 
     @Override
-    public void deleteAll() {
-        films.clear();
-    }
-
-    @Override
     public List<Film> getAll() {
         return new ArrayList<>(films.values());
-    }
-
-    @Override
-    public Optional<Film> getById(Long id) {
-        return Optional.ofNullable(films.get(id));
-    }
-
-    @Override
-    public void deleteById(Long id) {
-        if (!films.containsKey(id)) {
-            throw new EntityNotFoundException("Фильм с ID " + id + " не найден.");
-
-        }
-        films.remove(id);
     }
 
     private boolean existsByTitle(String title) {

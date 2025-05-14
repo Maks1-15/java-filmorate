@@ -2,29 +2,23 @@ package ru.yandex.practicum.filmorate.controller;
 
 import jakarta.validation.Valid;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exception.EntityNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.impl.FilmServiceImpl;
 
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @RestController
 @RequestMapping("/films")
+@RequiredArgsConstructor
 public class FilmController {
 
     private final FilmServiceImpl filmService;
-
-    @Autowired
-    public FilmController(FilmServiceImpl filmService) {
-        this.filmService = filmService;
-    }
 
     @PostMapping
     public ResponseEntity<Film> create(@Valid @RequestBody Film film) {
@@ -53,39 +47,5 @@ public class FilmController {
         List<Film> films = filmService.getAll();
         log.info("Возвращено {} фильмов.", films.size());
         return new ResponseEntity<>(films, HttpStatus.OK);
-    }
-
-    @GetMapping("{id}")
-    public ResponseEntity<Film> getById(@PathVariable Long id) {
-        log.info("Получен запрос на получение фильма с ID: {}", id);
-        Optional<Film> film = filmService.getById(id);
-        if (film.isPresent()) {
-            log.info("Фильм с ID {} найден.", id);
-            return new ResponseEntity<>(film.get(), HttpStatus.OK);
-        } else {
-            log.warn("Фильм с ID {} не найден.", id);
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @DeleteMapping
-    public ResponseEntity<Void> deleteAll() {
-        log.info("Получен запрос на удаление всех фильмов.");
-        filmService.deleteAll();
-        log.info("Все фильмы удалены.");
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
-    @DeleteMapping("{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable Long id) {
-        log.info("Получен запрос на удаление фильма с ID: {}", id);
-        try {
-            filmService.deleteById(id);
-            log.info("Фильм с ID {} удален.", id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (EntityNotFoundException e) {
-            log.warn("Фильм с ID {} не найден для удаления.", id);
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
     }
 }

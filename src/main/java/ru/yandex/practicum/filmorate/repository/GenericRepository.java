@@ -9,10 +9,4 @@ public interface GenericRepository<T> {
     T update(T entity);
 
     List<T> getAll();
-
-    Optional<T> getById(Long id);
-
-    void deleteAll();
-
-    void deleteById(Long id);
 }
