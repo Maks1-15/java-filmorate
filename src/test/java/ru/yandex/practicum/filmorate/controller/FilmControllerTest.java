@@ -107,6 +107,4 @@ public class FilmControllerTest {
                         .content(objectMapper.writeValueAsString(film)))
                 .andExpect(status().isBadRequest());
     }
-
-
 }

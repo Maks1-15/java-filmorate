@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.repository.impl;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.exception.EntityNotFoundException;
 import ru.yandex.practicum.filmorate.exception.FilmAlreadyExistsException;
@@ -7,13 +8,37 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.repository.GenericRepository;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Repository
+@RequiredArgsConstructor
 public class FilmRepositoryImpl implements GenericRepository<Film> {
 
     private final Map<Long, Film> films = new HashMap<>();
-    private final AtomicInteger idGenerator = new AtomicInteger(1);
+    private final AtomicLong idGenerator = new AtomicLong(1);
+    private final Map<Long, Set<Long>> filmLikes = new HashMap<>();
+
+    // Метод для добавления лайка фильму от пользователя
+    public void addLike(Long filmId, Long userId) {
+        validIdByMap(filmId);
+        filmLikes.computeIfAbsent(filmId, k ->
+                new HashSet<>()).add(userId);
+    }
+
+    // Метод для удаления лайка фильму от пользователя
+    public void removeLike(Long filmId, Long userId) {
+        validIdByMap(filmId);
+        Set<Long> likes = filmLikes.get(filmId);
+        if (likes != null) {
+            likes.remove(userId);
+        }
+    }
+
+    // Метод для получения количества лайков фильма
+    public Long getLikeCount(Long filmId) {
+        return (long) filmLikes.getOrDefault(filmId, Collections.emptySet()).size();
+    }
+
 
     @Override
     public Film create(Film film) {
@@ -21,7 +46,7 @@ public class FilmRepositoryImpl implements GenericRepository<Film> {
             throw new FilmAlreadyExistsException("Фильм с названием '" + film.getName() + "' уже существует.");
         }
 
-        Long id = (long) idGenerator.getAndIncrement();
+        Long id = idGenerator.getAndIncrement();
         film.setId(id);
         films.put(id, film);
         return film;
@@ -42,8 +67,15 @@ public class FilmRepositoryImpl implements GenericRepository<Film> {
         return new ArrayList<>(films.values());
     }
 
+    // Метод уникальности названия фильма
     private boolean existsByTitle(String title) {
         return films.values().stream()
                 .anyMatch(f -> f.getName().equalsIgnoreCase(title));
+    }
+
+    private void validIdByMap(Long filmId) {
+        if (!films.containsKey(filmId)) {
+            throw new EntityNotFoundException("Фильма с таким id " + filmId + " не существует");
+        }
     }
 }

@@ -48,4 +48,27 @@ public class FilmController {
         log.info("Возвращено {} фильмов.", films.size());
         return new ResponseEntity<>(films, HttpStatus.OK);
     }
+
+
+    @PutMapping("/{id}/like/{userId}")
+    public ResponseEntity<Void> addLike(@PathVariable Long id, @PathVariable Long userId) {
+        log.info("Получен запрос на добавления лайка");
+        filmService.addLike(id, userId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}/like/{userId}")
+    public ResponseEntity<Void> removeLike(@PathVariable Long id, @PathVariable Long userId) {
+        log.info("Получен запрос на удаление лайка");
+        filmService.removeLike(id, userId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/popular")
+    public ResponseEntity<List<Film>> getPopularFilms
+            (@RequestParam(required = false, defaultValue = "10") Integer count) {
+        log.info("Получен запрос получение {} фильмов", count);
+        List<Film> popularFilms = filmService.getTopNFilms(count);
+        return new ResponseEntity<>(popularFilms, HttpStatus.OK);
+    }
 }
