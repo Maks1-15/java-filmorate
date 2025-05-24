@@ -35,16 +35,18 @@ public class FilmServiceImpl implements GenericService<Film> {
 
     public void addLike(Long filmId, Long userId) {
         userRepository.checkUserExists(userId);
+        filmRepository.checkFilmExists(filmId);
         filmRepository.addLike(filmId, userId);
     }
 
     public void removeLike(Long filmId, Long userId) {
         userRepository.checkUserExists(userId);
+        filmRepository.checkFilmExists(filmId);
         filmRepository.removeLike(filmId, userId);
     }
 
     public List<Film> getTopNFilms(int count) {
-        if (count < 0) {
+        if (count <= 0) {
             count = 10;
         }
         return filmRepository.getAll().stream()

@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.repository.impl;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.EntityNotFoundException;
 import ru.yandex.practicum.filmorate.exception.FilmAlreadyExistsException;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -10,8 +9,7 @@ import ru.yandex.practicum.filmorate.repository.GenericRepository;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
-@Repository
-@RequiredArgsConstructor
+@Component
 public class FilmRepositoryImpl implements GenericRepository<Film> {
 
     private final Map<Long, Film> films = new HashMap<>();
@@ -20,14 +18,12 @@ public class FilmRepositoryImpl implements GenericRepository<Film> {
 
     // Метод для добавления лайка фильму от пользователя
     public void addLike(Long filmId, Long userId) {
-        validIdByMap(filmId);
         filmLikes.computeIfAbsent(filmId, k ->
                 new HashSet<>()).add(userId);
     }
 
     // Метод для удаления лайка фильму от пользователя
     public void removeLike(Long filmId, Long userId) {
-        validIdByMap(filmId);
         Set<Long> likes = filmLikes.get(filmId);
         if (likes != null) {
             likes.remove(userId);
@@ -73,7 +69,7 @@ public class FilmRepositoryImpl implements GenericRepository<Film> {
                 .anyMatch(f -> f.getName().equalsIgnoreCase(title));
     }
 
-    private void validIdByMap(Long filmId) {
+    public void checkFilmExists(Long filmId) {
         if (!films.containsKey(filmId)) {
             throw new EntityNotFoundException("Фильма с таким id " + filmId + " не существует");
         }

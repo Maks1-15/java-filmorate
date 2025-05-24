@@ -1,6 +1,6 @@
 package ru.yandex.practicum.filmorate.repository.impl;
 
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.EmailAlreadyExistsException;
 import ru.yandex.practicum.filmorate.exception.EntityNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
@@ -9,7 +9,7 @@ import ru.yandex.practicum.filmorate.repository.GenericRepository;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
-@Repository
+@Component
 public class UserRepositoryImpl implements GenericRepository<User> {
 
     private final Map<Long, User> users = new HashMap<>();
@@ -18,7 +18,6 @@ public class UserRepositoryImpl implements GenericRepository<User> {
 
     // Метод для добавления пользователя в друзья к другому пользователю
     public void addFriend(Long userId, Long friendId) {
-        checkUsersExists(userId, friendId);
         // Добавляем первого в список друзей
         friends.computeIfAbsent(userId, k ->
                 new HashSet<>()).add(friendId);
@@ -29,7 +28,6 @@ public class UserRepositoryImpl implements GenericRepository<User> {
 
     // Метод для удаления пользователя из друзей другого пользователя
     public void removeFriend(Long userId, Long friendId) {
-        checkUsersExists(userId, friendId);
         // Проверяем наличие друга у первого и удаляем
         friends.getOrDefault(userId, Collections.emptySet()).remove(friendId);
         friends.getOrDefault(friendId, Collections.emptySet()).remove(userId);
@@ -77,13 +75,17 @@ public class UserRepositoryImpl implements GenericRepository<User> {
         return new ArrayList<>(users.values());
     }
 
+    public User getUserById(Long userId) {
+        return users.get(userId);
+    }
+
     // Метод уникальность email
     private boolean existsByEmail(String email) {
         return users.values().stream()
                 .anyMatch(f -> f.getEmail().equalsIgnoreCase(email));
     }
 
-    private void checkUsersExists(Long userId, Long friendId) {
+    public void checkUsersExists(Long userId, Long friendId) {
         if (!users.containsKey(userId) || !friends.containsKey(friendId)) {
             throw new EntityNotFoundException("Пользователь(и) с таким id не найден(ы)");
         }
