@@ -47,4 +47,34 @@ public class UserController {
         log.info("Возвращено {} пользователей.", users.size());
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
+
+    @PutMapping("/{id}/friends/{friendId}")
+    public ResponseEntity<Void> addFriend(@PathVariable Long id, @PathVariable Long friendId) {
+        log.info("Получен запрос на добавление в друзья пользователем.");
+        userService.addFriend(id, friendId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}/friends/{friendId}")
+    public ResponseEntity<Void> removeFriend(@PathVariable Long id, @PathVariable Long friendId) {
+        log.info("Получен запрос на удаление из друзей пользователем.");
+        userService.removeFriend(id, friendId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/friends")
+    public ResponseEntity<List<User>> getFriends(@PathVariable Long id) {
+        log.info("Получен запрос на получение списка друзей пользователя");
+        List<User> friends = userService.getFriends(id);
+        log.info("Возвращено {} друзей.", friends.size());
+        return new ResponseEntity<>(friends, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/friends/common/{otherId}")
+    public ResponseEntity<List<User>> getFriendsCommon(@PathVariable Long id, @PathVariable Long otherId) {
+        log.info("Получен запрос на получение общих друзей пользователей");
+        List<User> friends = userService.getMutualFriends(id, otherId);
+        log.info("Возвращено общих {} друзей.", friends.size());
+        return new ResponseEntity<>(friends, HttpStatus.OK);
+    }
 }

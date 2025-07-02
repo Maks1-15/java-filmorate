@@ -7,6 +7,7 @@ import ru.yandex.practicum.filmorate.repository.impl.UserRepositoryImpl;
 import ru.yandex.practicum.filmorate.service.GenericService;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -30,5 +31,29 @@ public class UserServiceImpl implements GenericService<User> {
     @Override
     public List<User> getAll() {
         return userRepository.getAll();
+    }
+
+    public void addFriend(Long friendId, Long userId) {
+        userRepository.checkUsersExists(friendId, userId);
+        userRepository.addFriend(friendId, userId);
+    }
+
+    public void removeFriend(Long friendId, Long userId) {
+        userRepository.checkUsersExists(friendId, userId);
+        userRepository.removeFriend(friendId, userId);
+    }
+
+    public List<User> getFriends(Long userId) {
+        List<Long> friendIds = userRepository.getFriends(userId).stream().toList();
+        return friendIds.stream()
+                .map(userRepository::getUserById)
+                .collect(Collectors.toList());
+    }
+
+    public List<User> getMutualFriends(Long userId, Long otherUserId) {
+        List<Long> mutualFriendIds = userRepository.getMutualFriends(userId, otherUserId);
+        return mutualFriendIds.stream()
+                .map(userRepository::getUserById)
+                .collect(Collectors.toList());
     }
 }
