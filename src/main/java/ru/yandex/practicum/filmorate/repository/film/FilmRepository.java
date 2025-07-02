@@ -30,7 +30,7 @@ public class FilmRepository {
     }
 
     private Film insert(Film film) {
-        String sql = "INSERT INTO films (name, description, release_date, duration, content_rating_id) " +
+        String sql = "INSERT INTO films (name, description, release_date, duration, content_rating_id)" +
                 "VALUES (?, ?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
@@ -52,7 +52,7 @@ public class FilmRepository {
     }
 
     private void update(Film film) {
-        String sql = "UPDATE films SET name = ?, description = ?, release_date = ?, duration = ?, " +
+        String sql = "UPDATE films SET name = ?, description = ?, release_date = ?, duration = ?," +
                 "content_rating_id = ? WHERE id = ?";
         jdbcTemplate.update(
                 sql,

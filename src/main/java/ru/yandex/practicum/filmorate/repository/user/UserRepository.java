@@ -124,7 +124,7 @@ public class UserRepository {
 
     public boolean isValidFriendRequest(int fromUserId, int toUserId) {
         String sql = String.format("""
-                SELECT COUNT(*) FROM %s 
+                SELECT COUNT(*) FROM %s
                 WHERE user1_id = ? AND user2_id = ? AND is_confirmed = false
                 """, "friends");
         Integer count = jdbcTemplate.queryForObject(sql, Integer.class, fromUserId, toUserId);
@@ -141,7 +141,7 @@ public class UserRepository {
 
     public void removeFriends(int userId, int friendId) {
         String sql = String.format("""
-                DELETE FROM %s 
+                DELETE FROM %s
                 WHERE (user1_id = ? AND user2_id = ?) 
                    OR (user2_id = ? AND user1_id = ?)
                 """, "friends");
