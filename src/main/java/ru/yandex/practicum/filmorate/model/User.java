@@ -4,6 +4,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,21 +12,23 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
+@Builder(toBuilder = true)
 public class User {
-    private Long id; // id пользователя
-    // Валидация через метод
-    private String name; // имя пользоФвателя
+    private int id;
 
-    @Email
-    @NotBlank
-    @NotNull
-    private String email; // email пользователя
+    // если имя не указано, используется логин
+    private String name;
 
-    @NotBlank
-    @NotNull
-    private String login; // логин пользователя
+    @Email(message = "Email должен быть в формате user@..")
+    @NotBlank(message = "Email не может быть пустым")
+    @NotNull(message = "Email обязателен для заполнения")
+    private String email;
 
-    @Past
-    @NotNull
-    private LocalDate birthday; // др пользователя
+    @NotBlank(message = "Логин не может быть пустым")
+    @NotNull(message = "Логин обязателен для заполнения")
+    private String login;
+
+    @Past(message = "Дата рождения должна быть в прошлом")
+    @NotNull(message = "Дата рождения обязательна для заполнения")
+    private LocalDate birthday;
 }
