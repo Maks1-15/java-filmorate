@@ -23,7 +23,7 @@ public class UserRepository {
 
     private User insert(User user) {
         String sql = String.format("""
-                INSERT INTO %s (email, login, name, birthday) 
+                INSERT INTO %s (email, login, name, birthday)
                 VALUES (?, ?, ?, ?)
                 """, "users");
 
@@ -42,8 +42,8 @@ public class UserRepository {
 
     private User update(User user) {
         String sql = String.format("""
-                UPDATE %s 
-                SET email = ?, login = ?, name = ?, birthday = ? 
+                UPDATE %s
+                SET email = ?, login = ?, name = ?, birthday = ?
                 WHERE id = ?
                 """, "users");
 
@@ -133,7 +133,7 @@ public class UserRepository {
 
     public void addFriends(int userId, int friendId, boolean isConfirmed) {
         String sql = String.format("""
-                INSERT INTO %s (user1_id, user2_id, is_confirmed) 
+                INSERT INTO %s (user1_id, user2_id, is_confirmed)
                 VALUES (?, ?, ?)
                 """, "friends");
         jdbcTemplate.update(sql, userId, friendId, isConfirmed);
@@ -142,7 +142,7 @@ public class UserRepository {
     public void removeFriends(int userId, int friendId) {
         String sql = String.format("""
                 DELETE FROM %s
-                WHERE (user1_id = ? AND user2_id = ?) 
+                WHERE (user1_id = ? AND user2_id = ?)
                    OR (user2_id = ? AND user1_id = ?)
                 """, "friends");
         jdbcTemplate.update(sql, userId, friendId, friendId, userId);
